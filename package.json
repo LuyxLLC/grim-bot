@@ -30,7 +30,7 @@
 		"discord.js": "^14.3.0",
 		"djs-commander": "git+https://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:x-oauth-basic@github.com/LuyxDevelopment/djs-commander.git",
 		"dotenv": "^16.0.2",
-		"is-image-url": "github:LuyxDevelopment/is-image-url",
+		"is-image-url": "git+https://github.com/LuyxDevelopment/is-image-url.git",
 		"loggage": "git+https://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:x-oauth-basic@github.com/LuyxDevelopment/loggage.git",
 		"tiny-typed-emitter": "^2.1.0"
 	},
