@@ -11,9 +11,8 @@ process.on('uncaughtExceptionMonitor', err => {
 
 await client.loadCommands();
 
-client.on('ready', async () => {
+client.on('ready', () => {
 	client.user!.setActivity('Early Access', { type: ActivityType.Watching });
-	await client.commandHandler.updateReleaseCommands();
 });
 
 client.interactions.on('command', interaction => {
