@@ -64,7 +64,7 @@ export default new Command({
 	ephemeral: true,
 	mode: CommandMode.RELEASE,
 	permissions: {
-		permissions: [],
+		permissions: [['ManageGuild']],
 		superuserOnly: false,
 	},
 	execute: async (interaction): Promise<void> => {
@@ -90,7 +90,7 @@ export default new Command({
 				const publicOption = (interaction as ChatInputCommandInteraction).options.getBoolean('public');
 				const mediaOption = (interaction as ChatInputCommandInteraction).options.getBoolean('media');
 
-				client.db.prepare('INSERT INTO lists (guild_id, list_id, name, createdAt, mediaOnly, public) VALUES (?,?,?,?,?)').run(interaction.guildId, lists.length, listName, Date.now(), mediaOption ? 1 : 0, publicOption ? 1 : 0);
+				client.db.prepare('INSERT INTO lists (guild_id, list_id, name, createdAt, mediaOnly, public) VALUES (?,?,?,?,?,?)').run(interaction.guildId, lists.length, listName, Date.now(), mediaOption ? 1 : 0, publicOption ? 1 : 0);
 
 				return void interaction.editReply({
 					embeds: [
@@ -144,13 +144,24 @@ export default new Command({
 					});
 				}
 
-				const { contents, list_id } = lists.find(list => list.name.toLowerCase() === listName.toLowerCase())!;
+				const { contents, list_id, name, mediaOnly } = lists.find(list => list.name.toLowerCase() === listName.toLowerCase())!;
 
 				const operation = (interaction as ChatInputCommandInteraction).options.getString('operation', true);
 				const value = (interaction as ChatInputCommandInteraction).options.getString('value', true);
 
 				switch (operation) {
 					case 'add': {
+
+						if (mediaOnly && !isImageUrl(value, true)) {
+							return void await interaction.editReply({
+								embeds: [
+									new EmbedBuilder()
+										.setColor('Red')
+										.setTitle('Invalid Item')
+										.setDescription('This list is **media only**. Please enter a valid image/gif URL.'),
+								],
+							});
+						}
 
 						await interaction.editReply({
 							embeds: [
@@ -180,7 +191,7 @@ export default new Command({
 								new EmbedBuilder()
 									.setColor('Green')
 									.setTitle('Item Added')
-									.setDescription(`You successfully added the item **${value}** to the **${listName}** list.`),
+									.setDescription(`You successfully added the item **${value}** to the **${name}** list.`),
 							],
 						});
 					}
@@ -216,7 +227,7 @@ export default new Command({
 								new EmbedBuilder()
 									.setColor('Green')
 									.setTitle('Item Removed')
-									.setDescription(`You successfully removed item **#${index}** from the **${listName}** list.`),
+									.setDescription(`You successfully removed item **#${index}** from the **${name}** list.`),
 							],
 						});
 					}
@@ -240,7 +251,7 @@ export default new Command({
 									new EmbedBuilder()
 										.setColor('Green')
 										.setTitle('Randomizer Image Reset')
-										.setDescription(`There is no longer an image/gif for the **${listName}** list!`),
+										.setDescription(`There is no longer an image/gif for the **${name}** list!`),
 								],
 							});
 						}
@@ -253,7 +264,7 @@ export default new Command({
 									new EmbedBuilder()
 										.setColor('Green')
 										.setTitle('Randomizer Image Updated')
-										.setDescription(`The image/gif for **${listName}** list has been updated to the following:`)
+										.setDescription(`The image/gif for **${name}** list has been updated to the following:`)
 										.setImage(value),
 								],
 							});
@@ -281,7 +292,12 @@ export default new Command({
 						embeds: [
 							new EmbedBuilder()
 								.setTitle('List Does Not Exist')
-								.setDescription(`There does not appear to be a list with the name **${listName}**.`),
+								.setDescription([
+									`There does not appear to be a list with the name **${listName}**.`,
+									'',
+									'**Available Lists**',
+									`${lists.map(l => `- ${l.name}`)}`,
+								].join('\n')),
 						],
 					});
 				}
