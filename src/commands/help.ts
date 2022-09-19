@@ -25,7 +25,7 @@ export default new Command({
 						'The `media` option is a true/false if the list is only images/gifs.',
 						'The `public` option is not yet implemented.',
 						'',
-						'To edit a list, type: `/list edit <list name> <operation> <value>',
+						'To edit a list, type: `/list edit <list name> <operation> <value>`',
 						'The `operation` is whether or not you are adding or removing an item for a list.',
 						'The `value` is whatever value you are adding or removing.',
 						'',
