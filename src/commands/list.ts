@@ -102,7 +102,7 @@ export default new Command({
 			}
 
 			case 'delete': {
-				const lists = client.db.prepare('SELECT * FROM lists WHERE guild_id=?').all(interaction.guildId) as ListData[] | [];
+				const lists = client.db.prepare('SELECT * FROM lists WHERE guild_id=?').all(interaction.guildId) as ListData[];
 
 				const listName = (interaction as ChatInputCommandInteraction).options.getString('list', true);
 
