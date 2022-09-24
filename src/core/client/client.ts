@@ -26,7 +26,7 @@ export class GrimBotClient extends CommanderClient {
 			client: this,
 			callbacks: {
 				async onNoPermissions(command, interaction): Promise<void> {
-					await interaction.editReply({
+					await interaction.reply({
 						embeds: [
 							new EmbedBuilder()
 								.setColor('Red')
