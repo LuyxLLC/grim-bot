@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
 import { Command, CommandMode } from 'djs-commander';
 import { client } from '../core/client/client.js';
 import { ListData } from '../typings/index.js';
@@ -37,13 +37,15 @@ export default new Command({
 			});
 		}
 
-		const { contents, randomImage, mediaOnly } = lists.find(list => list.name.toLowerCase() === listName.toLowerCase())!;
+		const { contents, randomImage, mediaOnly, receiveRole } = lists.find(list => list.name.toLowerCase() === listName.toLowerCase())!;
+
+		await (interaction.member as GuildMember).roles.add(receiveRole);
 
 		const parsed = JSON.parse(contents) as string[];
 
 		let results = (interaction as ChatInputCommandInteraction).options.getInteger('results') ?? 1;
 
-		if (randomImage && results !== 1) {
+		if (mediaOnly && results !== 1) {
 			return void await interaction.editReply({
 				embeds: [
 					new EmbedBuilder()

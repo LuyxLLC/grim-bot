@@ -43,6 +43,7 @@ export default new Command({
 					{ name: 'add', value: 'add' },
 					{ name: 'remove', value: 'remove' },
 					{ name: 'randomImage', value: 'randomImage' },
+					{ name: 'receiveRole', value: 'receiveRole' },
 				))
 			.addStringOption(input => input
 				.setName('value')
@@ -233,18 +234,6 @@ export default new Command({
 					}
 
 					case 'randomImage': {
-						await interaction.editReply({
-							embeds: [
-								new EmbedBuilder()
-									.setTitle('Randomizer Image')
-									.setDescription([
-										'Please take up to 30 seconds to enter in an image or gif to display during randomization.',
-										'',
-										'To clear the randomizer image, type `clear`.',
-									].join('\n')),
-							],
-						});
-
 						if (value === 'clear') {
 							return void await interaction.editReply({
 								embeds: [
@@ -276,6 +265,34 @@ export default new Command({
 									.setColor('Red')
 									.setTitle('Invalid URL')
 									.setDescription('Please try again and provide a valid image/gif URL.'),
+							],
+						});
+					}
+
+					case 'receiveRole': {
+						const role = await interaction.guild?.roles.fetch(value);
+
+						if (role?.name) {
+							return void await interaction.editReply({
+								embeds: [
+									new EmbedBuilder()
+										.setColor('Green')
+										.setTitle('Receive Role')
+										.setDescription([
+											`You set the role for **${listName}** to **${role.name}**.`,
+											'',
+											'Please make sure the bot can give users this role. Make sure this is a safe role to give!',
+										].join('\n')),
+								],
+							});
+						}
+
+						return void await interaction.editReply({
+							embeds: [
+								new EmbedBuilder()
+									.setColor('Red')
+									.setTitle('Invalid Role')
+									.setDescription('An invalid role ID was provided. Please make sure it is correct.'),
 							],
 						});
 					}

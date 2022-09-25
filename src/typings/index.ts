@@ -21,5 +21,6 @@ export interface ListData {
 	mediaOnly: 0 | 1;
 	randomCooldown: number;
 	randomImage: string | null;
+	receiveRole: Snowflake;
 	public: 0 | 1;
 }
