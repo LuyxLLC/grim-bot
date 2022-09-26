@@ -39,7 +39,9 @@ export default new Command({
 
 		const { contents, randomImage, mediaOnly, receiveRole } = lists.find(list => list.name.toLowerCase() === listName.toLowerCase())!;
 
-		if (await interaction.guild?.roles.fetch(receiveRole)) await (interaction.member as GuildMember).roles.add(receiveRole);
+		if ((await interaction.guild?.roles.fetch(receiveRole))) {
+			await (interaction.member as GuildMember).roles.add(receiveRole).catch(() => { });
+		}
 
 		const parsed = JSON.parse(contents) as string[];
 
