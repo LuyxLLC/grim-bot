@@ -5,17 +5,13 @@ import { DISCORD_TOKEN } from './core/constants.js';
 logger.setName('GrimBot');
 
 process.on('uncaughtExceptionMonitor', err => {
-	logger.fatal_error(err);
+  logger.fatal_error(err);
 });
 
 await client.loadCommands();
 
 client.on('ready', () => {
-	logger.info('Ready event run!');
-});
-
-client.interactions.on('command', interaction => {
-	client.commandHandler.run(interaction.commandName, interaction);
+  logger.info('Ready event run!');
 });
 
 client.login(DISCORD_TOKEN);
